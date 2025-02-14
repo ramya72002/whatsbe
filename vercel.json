@@ -12,11 +12,6 @@
         "src": "/(.*)",
         "dest": "src/server.js"
       }
-    ],
-    "env": {
-      "PORT": "5000",
-      "DATABASE_URL": "@database_url",
-      "CLIENT_ENDPOINT": "@client_endpoint"
-    }
+    ]
   }
   
