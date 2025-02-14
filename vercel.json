@@ -1,0 +1,22 @@
+{
+    "version": 2,
+    "name": "whatsapp_backend",
+    "builds": [
+      {
+        "src": "src/server.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "src/server.js"
+      }
+    ],
+    "env": {
+      "PORT": "5000",
+      "DATABASE_URL": "@database_url",
+      "CLIENT_ENDPOINT": "@client_endpoint"
+    }
+  }
+  
