@@ -28,7 +28,7 @@ const allowedOrigins = ['https://voxly.netlify.app','http://localhost:3000','htt
 const corsOptions = {
 	origin: function (origin, callback) {
 		// Check if the origin is in the list of allowed origins
-		// When a request is made from a page to the same origin (the same scheme, hostname, and port), browsers typically do not include an Origin header.
+		// When a request is made from a page to the same origin (the same sc   heme, hostname, and port), browsers typically do not include an Origin header.
 		// This behavior is part of the browser's same-origin policy to allow same origin requests and Non-CORS Requests.
 		if (!origin || allowedOrigins.indexOf(origin) !== -1) {
 			callback(null, true); // Allow the request
