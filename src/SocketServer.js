@@ -111,6 +111,70 @@ export default function (socket, io) {
 	socket.on('end call', (id) => {
 		console.log(`📴 'end call' event received for ${id}`);
 		io.to(id).emit('end call', { to: id });
-	});
-	
+	}); 
+// Start screen share
+socket.on('start screen share', ({ from, to, stream }) => {
+    console.log(`📽️ 'start screen share' event from ${from} to ${to}`);
+
+    let userSocket = onlineUsers.find((user) => user.userId === to);
+    if (userSocket) {
+        io.to(userSocket.socketId).emit('screen share started', { from });
+    } else {
+        console.error(`❌ No online user found with ID: ${to}`);
+    }
+});
+
+// Stop screen share
+socket.on('stop screen share', ({ from, to }) => {
+    console.log(`🛑 'stop screen share' event from ${from} to ${to}`);
+
+    let userSocket = onlineUsers.find((user) => user.userId === to);
+    if (userSocket) {
+        io.to(userSocket.socketId).emit('screen share stopped', { from });
+    }
+});
+
+socket.on("updateStream", async ({ streamType }) => {
+    try {
+        console.log("📡 Received updateStream event:", streamType);
+
+        let newStream;
+
+        if (streamType === "screen") {
+            console.log("🖥️ Expecting a screen stream from sender...");
+
+            newStream = connectionRef.current?.peerConnection.getReceivers()
+                .find((receiver) => receiver.track.kind === "video")?.track;
+
+            if (newStream) {
+                console.log("📺 Screen track received:", newStream);
+                const streamObject = new MediaStream([newStream]);
+                peerVideo.current.srcObject = streamObject;
+                console.log("🎥 Updated peerVideo with screen share stream");
+            } else {
+                console.warn("⚠️ No video track received for screen share!");
+            }
+
+        } else {
+            console.log("📷 Expecting a camera stream from sender...");
+
+            newStream = connectionRef.current?.peerConnection.getReceivers()
+                .find((receiver) => receiver.track.kind === "video")?.track;
+
+            if (newStream) {
+                console.log("📸 Camera track received:", newStream);
+                const streamObject = new MediaStream([newStream]);
+                peerVideo.current.srcObject = streamObject;
+                console.log("🎥 Updated peerVideo with camera stream");
+            } else {
+                console.warn("⚠️ No video track received for camera stream!");
+            }
+        }
+    } catch (error) {
+        console.error("❌ Error in updateStream event:", error);
+    }
+});
+
+
+
 }
